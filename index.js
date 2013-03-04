@@ -3,7 +3,9 @@
  * Module dependencies.
  */
 
-var Enumerable = require('enumerable');
+var Emitter    = require('emitter')
+  , Enumerable = require('enumerable');
+
 
 /**
  * Expose `Collection`.
@@ -27,6 +29,12 @@ function Collection(models) {
  */
 
 Enumerable(Collection.prototype);
+
+/**
+ * Mixin emitter.
+ */
+
+Emitter(Collection.prototype);
 
 /**
  * Iterator implementation.
@@ -60,5 +68,22 @@ Collection.prototype.length = function(){
  */
 
 Collection.prototype.push = function(model){
-  return this.models.push(model);
+  this.models.push(model);
+  this.emit('push', model);
+  return this.models.length;
+};
+
+/**
+ * Remove `model` from the collection.
+ *
+ * @param {Object} model
+ * @api public
+ */
+
+Collection.prototype.remove = function(model){
+  var index = this.models.indexOf(model);
+  if (index > -1) {
+    this.models.splice(index, 1);
+    this.emit('remove', model);
+  }
 };
