@@ -6,23 +6,33 @@
 var Emitter    = require('emitter')
   , Enumerable = require('enumerable');
 
-
 /**
  * Expose `Collection`.
  */
 
-module.exports = Collection;
+module.exports = createCollection;
 
 /**
- * Initialize a new collection with the given `models`.
+ * Create a new collection constructor for a model, or
+ * use new Collection(models); to create a collection.
  *
- * @param {Array} models
+ * @param {Array|Function} Model
  * @api public
  */
 
-function Collection(models) {
-  this.models = models || [];
+function createCollection (Model) {
+
+  function Collection(models) {
+    this.models = models || [];
+  }
+
+  // Check for constructor case
+  if (this instanceof createCollection) return new Collection(Model);
+
+  Collection.prototype.Model = Model;
+  return Collection;
 }
+
 
 /**
  * Mixin enumerable.
