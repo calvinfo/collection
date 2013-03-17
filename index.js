@@ -87,3 +87,13 @@ Collection.prototype.remove = function(model){
     this.emit('remove', model);
   }
 };
+
+/**
+ * Returns the collection as an array of objects
+ *
+ * @api public
+ */
+
+Collection.prototype.toJSON = function() {
+  return this.map(function (model) { return model.toJSON(); });
+};
